@@ -1,0 +1,123 @@
+################################################################################
+# Codex project configuration
+# Repository-scoped defaults for a premium web product workflow
+################################################################################
+
+# Main model for serious implementation, architecture, and review work.
+model = "gpt-5.4"
+
+# Tone/style for supported models.
+personality = "pragmatic"
+
+# Good default for trusted repos: asks when needed, but doesn't block normal flow.
+approval_policy = "on-request"
+
+# Safe default for local coding: write inside the workspace, no full host access.
+sandbox_mode = "workspace-write"
+
+# Keep web search available in the safer cached mode by default.
+web_search = "cached"
+
+# Help Codex anchor the project root correctly.
+project_root_markers = [".git", "package.json", "pnpm-workspace.yaml", "turbo.json"]
+
+# Optional: if AGENTS.md is ever missing in some repos, allow fallback names.
+project_doc_fallback_filenames = ["AGENTS.md", "agents.md"]
+
+# Keep the project doc readable without letting it grow arbitrarily huge.
+project_doc_max_bytes = 131072
+
+# Plan mode can spend a bit more effort on architecture/planning turns.
+plan_mode_reasoning_effort = "high"
+
+# Useful when you want concise reasoning summaries in supported surfaces.
+model_reasoning_summary = "concise"
+
+# Keep outputs practical by default.
+model_verbosity = "medium"
+
+################################################################################
+# Workspace-write sandbox tuning
+################################################################################
+
+[sandbox_workspace_write]
+# Keep outbound network off for shell commands by default.
+network_access = false
+
+# Optional hardening; usually fine to leave false unless you want tighter temp-dir behavior.
+exclude_slash_tmp = false
+exclude_tmpdir_env_var = false
+
+################################################################################
+# Windows-specific behavior
+################################################################################
+
+[windows]
+# Recommended by OpenAI when running natively on Windows.
+sandbox = "elevated"
+
+################################################################################
+# Specialist agent execution limits
+################################################################################
+
+[agents]
+# Good ceiling for a serious repo without spawning chaos.
+max_threads = 6
+
+# Keep nesting shallow unless you intentionally use deeper agent trees.
+max_depth = 2
+
+# 30 minutes per worker is the documented fallback when unset; making it explicit is fine.
+job_max_runtime_seconds = 1800
+
+################################################################################
+# Profiles
+################################################################################
+
+# Default startup profile
+profile = "build"
+
+[profiles.build]
+model = "gpt-5.4"
+personality = "pragmatic"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+plan_mode_reasoning_effort = "high"
+model_verbosity = "medium"
+
+[profiles.review]
+model = "gpt-5.4"
+personality = "pragmatic"
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+web_search = "cached"
+plan_mode_reasoning_effort = "high"
+model_verbosity = "medium"
+
+[profiles.fast]
+model = "gpt-5.4-mini"
+personality = "pragmatic"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+plan_mode_reasoning_effort = "medium"
+model_verbosity = "low"
+
+[profiles.plan]
+model = "gpt-5.4"
+personality = "pragmatic"
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+web_search = "cached"
+plan_mode_reasoning_effort = "xhigh"
+model_verbosity = "medium"
+
+[profiles.yolo]
+model = "gpt-5.4"
+personality = "pragmatic"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+web_search = "live"
+plan_mode_reasoning_effort = "medium"
+model_verbosity = "low"
